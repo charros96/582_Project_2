@@ -26,6 +26,7 @@ def process_order(order):
                     existing_order.counterparty_id = order_obj.id
                     
                     order_obj.counterparty_id = existing_order.id
+                    session.commit()
                     if (existing_order.buy_amount > order_obj.sell_amount) | (order_obj.buy_amount > existing_order.sell_amount) :
                         if (existing_order.buy_amount > order_obj.sell_amount):
                             parent = existing_order
@@ -43,7 +44,7 @@ def process_order(order):
                         child_obj = Order(**{f:child[f] for f in fields})
                         session.add(child_obj)
                         child_obj.creator_id=parent.id
-                        
+                        session.commit()
                     
                     break
 
