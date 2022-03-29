@@ -15,9 +15,9 @@ def process_order(order):
     
     unfilled_db = session.query(Order).filter(Order.filled == "").all()
     for existing_order in unfilled_db:
-        if existing_order.buy_currency == order.sell_currency:
-            if existing_order.sell_currency == order.buy_currency:
-                if existing_order.sell_amount / existing_order.buy_amount >= order.buy_amount/order.sell_amount :
+        if existing_order.buy_currency == order_obj.sell_currency:
+            if existing_order.sell_currency == order_obj.buy_currency:
+                if (existing_order.sell_amount / existing_order.buy_amount) >= (order_obj.buy_amount/order_obj.sell_amount) :
                     ct = datetime.datetime.now()
                     existing_order.filled = ct
                     order_obj.filled = ct
