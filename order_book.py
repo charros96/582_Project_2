@@ -20,20 +20,21 @@ def process_order(order):
         if existing_order.buy_currency == order_obj.sell_currency:
             if existing_order.sell_currency == order_obj.buy_currency:
                 if (existing_order.sell_amount / existing_order.buy_amount) >= (order_obj.buy_amount/order_obj.sell_amount) :
-                    ct = datetime.now()
-                    existing_order.filled = ct
-                    order_obj.filled = ct
-                    existing_order.counterparty_id = order_obj.id
                     
+                    existing_order.filled = datetime.now()
+                    order_obj.filled = datetime.now()
+                    existing_order.counterparty_id = order_obj.id
+                    existing_order.counterparty = order_obj
                     order_obj.counterparty_id = existing_order.id
+                    order_obj.counterparty = existing_order
                     session.commit()
                     if (existing_order.buy_amount > order_obj.sell_amount) | (order_obj.buy_amount > existing_order.sell_amount) :
                         if (existing_order.buy_amount > order_obj.sell_amount):
                             parent = existing_order
-                            counter = order_obj
+                            counter = parent.counterparty
                         if order_obj.buy_amount > existing_order.sell_amount:
                             parent = order_obj
-                            counter = existing_order
+                            counter = parent.counterparty
                         child = {}
                         child['sender_pk'] = parent.sender_pk
                         child['receiver_pk'] = parent.receiver_pk
