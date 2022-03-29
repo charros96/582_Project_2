@@ -9,5 +9,9 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 def process_order(order):
-    #Your code here
+    fields = ['sender_pk','receiver_pk','buy_currency','sell_currency','buy_amount','sell_amount']
+    order_obj = Order(**{f:order[f] for f in fields})
+
+    session.add(order_obj)
+    session.commit()
     pass
