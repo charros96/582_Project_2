@@ -24,17 +24,17 @@ def process_order(order):
                     existing_order.filled = datetime.now()
                     order_obj.filled = datetime.now()
                     existing_order.counterparty_id = order_obj.id
-                    existing_order.counterparty = order_obj
+                    #existing_order.counterparty = order_obj
                     order_obj.counterparty_id = existing_order.id
-                    order_obj.counterparty = existing_order
+                    #order_obj.counterparty = existing_order
                     session.commit()
                     if (existing_order.buy_amount > order_obj.sell_amount) | (order_obj.buy_amount > existing_order.sell_amount) :
                         if (existing_order.buy_amount > order_obj.sell_amount):
                             parent = existing_order
-                            counter = parent.counterparty
+                            counter = order_obj
                         if order_obj.buy_amount > existing_order.sell_amount:
                             parent = order_obj
-                            counter = parent.counterparty
+                            counter = existing_order
                         child = {}
                         child['sender_pk'] = parent.sender_pk
                         child['receiver_pk'] = parent.receiver_pk
@@ -43,8 +43,9 @@ def process_order(order):
                         child['buy_amount'] = parent.buy_amount-counter.sell_amount
                         child['sell_amount'] = (parent.buy_amount-counter.sell_amount)*(parent.sell_amount/parent.buy_amount)  
                         child_obj = Order(**{f:child[f] for f in fields})
+                        child_obj.creator_id = parent.id
                         session.add(child_obj)
-                        child_obj.creator_id=parent.id
+                        
                         session.commit()
                     
                     break
