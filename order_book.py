@@ -16,7 +16,8 @@ def process_order(order):
     unfilled_db = session.query(Order).filter(Order.filled == None).all()
 
     for existing_order in unfilled_db:
-        #print(existing_order)
+        session.add(order_obj)
+        session.commit()
         if existing_order.buy_currency == order_obj.sell_currency:
             if existing_order.sell_currency == order_obj.buy_currency:
                 if (existing_order.sell_amount / existing_order.buy_amount) >= (order_obj.buy_amount/order_obj.sell_amount) :
@@ -47,10 +48,11 @@ def process_order(order):
                         session.add(child_obj)
                         
                         session.commit()
+                        break
                     
                     break
 
-    session.add(order_obj)
+    
     session.commit()
     
     pass
